@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rate & Provide Feedback </title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    h2 {
+      margin-top: 50px;
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    table {
+      width: 70%;
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      margin-left: 45%;
+    }
+    .rating {
+       
+        direction: rtl;
+        text-align: center;
+        display: inline-block;
+        
+    }
+
+    .rating input {
+        display: none;
+    }
+
+    .rating label {
+        display: inline-block;
+        cursor: pointer;
+        color: #777777;
+        
+    }
+
+    .rating label:before {
+        content: '\2605';
+        font-size: 2em;
+        padding: 0.1em;
+        color: #d3d3d3;
+    }
+
+    .rating input:checked ~ label:before,
+    .rating label:hover ~ label:before {
+        color: #f7d301;
+    }
+
+    .rating input:checked + label:before {
+        color: #f7d301;
+    }
+
+    .rating label:hover:before {
+        color: #f7d301;
+    }
+    .rating-container {
+        display: flex;
+        justify-content: center;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h2>Rate & Provide Feedback for {{ book.title }}</h2>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      {% for category, message in messages %}
+          {% if category == 'error' %}
+              <p style="color: red;">{{ message }}</p>
+          {% else %}
+              <p style="color: green;">{{ message }}</p>
+          {% endif %}
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+  <form action="/rate_book/{{ book.id }}" method="post">
+    
+    <label for="feedback">Feedback:(Optional)</label>
+    <textarea id="feedback" name="feedback" rows="4"></textarea>
+    <div class="rating-container">
+      <div class="rating" >
+        <input type="radio" id="star5" name="rating" value="5">
+        <label for="star5"></label>
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4"></label>
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3"></label>
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2"></label>
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1"></label>
+    </div>
+    </div>
+    <button type="submit">Submit</button>
+
+  </form>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Rating (out of 5)</th>
+        <th>Feedback</th>
+        <th>User_Id</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rf in ratingandfeedbacks %}
+      {%if rf.book_id==book.id%}
+      <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ rf.rating }}</td>
+        <td>{{ rf.feedback }}</td>
+        <td>{{rf.user_id}}</td>
+      </tr>
+      {%endif%}
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <a href="/udash" >Back to home page</a>
+</body>
+</html>
+

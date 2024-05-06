@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management</title>
+    <style>
+        body {
+
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .book-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .return-date {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .read-button,  .feedback-button {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            width: 70%;
+        }
+        .return-button{
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            width: 75%;
+            border: none;
+        }
+        header {
+            background-color: goldenrod;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        header ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header ul li {
+            margin: 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        header ul li a {
+            text-decoration: none;
+            color: #fff;
+            transition: color 0.3s;
+        }
+        .payment-button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-left: 40%;
+        }
+
+        .link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>Welcome to Bookzy</li>
+                <li><a href="udash">Home</a></li>
+                <li><a href="my_books">My Books</a></li>
+                <li><a href="uprofile"><img id="image" src="/static/logo.png" height="30px"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <br>
+    <br>
+    <br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+                <p style="color: red; text-align: center;">{{ message }}</p>
+            {% else %}
+                <p style="color: green;text-align: center;">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% for book in books %}
+{% for b in bookissued%}
+{% if b.book_id==book.id%}
+    <div class="book-container">
+        <h3 class="book-title">{{ book.title }}</h3>
+        <p class="book-author">{{ book.author }}</p>
+        <p class="book-author">Content: {{ book.Content }}</p>
+        <p class="return-date">Return Date: {{ b.return_date }}</p>
+        <a class="read-button" href="/view_pdf/{{ book.pdf_path }}">Read</a>
+        <a href="/rate_book/{{ book.id }}" class="feedback-button">Rate and Provide Feedback</a>
+        <form action="/return" method="post">
+            <input type="hidden" name="id" value="{{ book.id }}">
+            <button type="submit" class="return-button">Return</button>
+        </form>
+    
+    
+        <br>
+        <br>
+        <h1 style="text-align: center;">Pay to Download</h1>
+        <input type="checkbox" id="paymentCheckbox" style="display: none;">
+      
+        {% if b.status == 'Purchased' %}
+            <a href="{{ url_for('static', filename=book.pdf_path) }}" download class="link">Download Available</a>
+        {%endif%}
+     
+        <div class="payment-section">
+            <h2>Payment Section</h2>
+            <form action="/process_payment" method="post">
+                <input type="text" placeholder="Card Number" id="cardNumber">
+                <input type="text" placeholder="Expiry Date" id="expiryDate">
+                <input type="text" placeholder="CVV" id="cvv">
+                <p><b>The cost of the book is ₹599</b></p>
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                <input type="submit" value="Pay" class="payment-button">
+            </form>
+        </div>
+    </div>
+    {%endif%}
+    {%endfor%}
+{% endfor %} 
+</body>
+</html>
+

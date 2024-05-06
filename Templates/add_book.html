@@ -1,0 +1,118 @@
+
+<html>
+  <head>
+    <title>Add Book</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 100px auto;
+        padding: 40px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: calc(100% - 16px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        width: 100%;
+        background-color: #4caf50;
+        color: #fff;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #333;
+      }
+  </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Add Book</h2>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          {% for category, message in messages %}
+              {% if category == 'error' %}
+                  <p style="color: red;">{{ message }}</p>
+              {% else %}
+                  <p style="color: green;">{{ message }}</p>
+              {% endif %}
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+      <form action="/add_book" method="post">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+    
+        <div class="form-group">
+          <label for="author">Author:</label>
+          <input type="text" id="author" name="author" required>
+        </div>
+    
+        <div class="form-group">
+          <label for="content">Content:</label>
+          <input type="text" id="content" name="content" required>
+        </div>
+
+        <div class="form-group">
+          <label for="Quantity">Quantity:</label>
+          <input type="text" id="quantity" name="quantity" required>
+        </div>
+    
+        <div class="form-group">
+          <label for="pdf_path">PDF Path:</label>
+          <input type="text" name="pdf_path" id="pdf_path">
+        </div>
+    
+        <div class="form-group">
+          <label for="section">Section:</label>
+          <select id="section" name="section">
+            {% for section in sections %}
+              <option value="{{ section.id }}">{{ section.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+    
+        <button type="submit">Add Book to Section</button>
+      </form>
+    
+      <a class="link" href="/admindashboard">Back to Admin Dashboard</a>
+    </div>
+    
+  </body>
+</html>

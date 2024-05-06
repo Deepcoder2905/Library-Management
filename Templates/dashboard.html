@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        body {
+                font-family: 'Montserrat', sans-serif;
+                background-color: #f8f9fa;
+                color: #333;
+           }
+        header {
+                background-color: chocolate;
+                color: #fff;
+                padding: 20px 0;
+                text-align: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 100;
+            }
+        nav ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        nav ul li {
+                margin: 0 20px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+        nav ul li a {
+                text-decoration: none;
+                color: #fff;
+            }
+        main {
+                margin-top: 30px;
+                padding: 20px;
+            }
+        h2 {
+                color: #333;
+                margin-bottom: 20px;
+            }
+        table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+        th, td {
+                padding: 10px 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+        th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+                color: #333;
+            }
+        tr:nth-child(even) {
+                background-color: #f5f5f5;
+            }
+        a.button {
+                display: inline-block;
+                padding: 8px 20px;
+                background-color: #007bff;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+                margin-right: 10px;
+            }
+        form {
+                display: inline;
+                margin-left: 10px;
+            }
+        button[type="submit"] {
+                border: none;
+                padding: 8px 10px;
+                font-size: 15px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+        .accept-button {
+                background-color: #28a745; 
+                color: white;
+            }
+
+        .reject-button {
+                background-color: #dc3545; 
+                color: white;
+            }
+
+
+        .manage-sections {
+                display: inline-block;
+                width: 48%; 
+                vertical-align: top; 
+                margin-right: 2%; 
+                padding: 10px;
+                box-sizing: border-box;
+                background-color: #fff; 
+                border-radius: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+                overflow-x: auto;
+            }
+
+        .manage-sections:last-child {
+                margin-right: 0; 
+            }
+
+        .manage-sections h2 {
+                margin-top: 0;
+            }
+
+</style>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li>Welcome, Admin {{ admin_username }}</li>
+            <li><a href="/profile"><img src="/static/logo.png" alt="Library Logo" height="40px"></a></li>
+        </ul>
+    </nav>
+</header>
+<br>
+<br>
+<br>
+<br>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        {% if category == 'error' %}
+            <p style="color: red;">{{ message }}</p>
+        {% else %}
+            <p style="color: green;">{{ message }}</p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<main>
+    <div class="manage-sections">
+        <h2>Manage Books</h2>
+        
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Edit</th>
+            </tr>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td><a href="/editbook/{{ book.id }}" class="button">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+            <br>
+            <br>
+            <a href="/add_book" class="button" >Add New Book</a>
+            <a href="/remove_book" class="button">Remove Book</a>
+            <br>
+            <br>
+            <a href="/issuetou" class="button">Monitor Book Status</a>
+        
+    </div>
+    <div class="manage-sections">
+        <h2>Manage Sections</h2>
+        
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Date Created</th>
+                <th>Edit</th>
+            </tr>
+            {% for section in sections %}
+                <tr>
+                    <td>{{ section.name }}</td>
+                    <td>{{ section.description }}</td>
+                    <td>{{section.date_created}}</td>
+                    <td><a href="/editsection/{{ section.id }}" class="button">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+            <br>
+            <br>
+            <a href="/add_section" class="button">Add New Section</a>
+            <a href="/remove_section" class="button">Remove Section</a>
+        
+    </div>
+</main>
+
+<main>
+    <div class="manage-sections">
+        <h2>Book Requests</h2>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>User_id</th>
+                <th>Accept Request</th>
+                <th>Reject Request</th>
+            </tr>
+            {% for request in book_requests %}
+            {% if request.status=='pending'%}
+                <tr>
+                    <td>{{ request.name }}</td>
+                    <td>{{ request.author }}</td>
+                    <td>{{ request.user_id }}</td>
+                    <td>
+                        <form action="/accept_request/{{ request.id }}" method="post">
+                            <button type="submit" class="accept-button">Accept</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/reject_request/{{ request.id }}" method="post">
+                            <button type="submit" class="reject-button">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {%endif%}
+            {% endfor %}
+        </table>
+    </div>
+    <div class="manage-sections">
+        <h2>Manage Users</h2>
+        <table>
+            <tr>
+                <th>Usernames</th>
+                <th>Emails</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <br>
+        
+            <a href="/add_user" class="button">Add New User</a>
+            <a href="/remove_user" class="button">Remove User</a>
+            <br>
+            <br>
+            <a href="/changeDes" class="button">Change User to Librarian</a>
+        
+    </div>
+</main>
+
+</body>
+</html>
+
+    

@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title>
+            Library Management
+        </title>
+        <style type=text/css>   
+            body   
+            {  
+            height: 100vh;  
+            margin-top: 100px;  
+            padding: 50px;  
+            background-size: cover;  
+            font-family: sans-serif;
+            background-image: url("/static/background_login.jpg");  
+            }  
+            header {  
+            background-color: brown;  
+            position: fixed;  
+            left: 0;  
+            right: 0;  
+            top: 0px;  
+            height: 60px;  
+            align-items: center;  
+            box-shadow: 0 0 100px 0 black; 
+            border: 5px solid black;
+            }  
+            header * {  
+            display: inline;  
+            }  
+            header li {  
+            margin: 30px;
+            margin-bottom: 1000px;
+             
+            }  
+            header li a {  
+            color: rgba(33, 4, 35, 0.806);  
+            text-decoration: none; 
+            
+            } 
+            #image{
+                margin-top: 5px;
+                margin-left: 620px;
+            } 
+       
+            
+            </style>      
+    </head>
+    <body>
+        <header>
+        <nav><b>
+            <ul>
+                <li>
+                    <a href="home">Home</a>
+                </li>
+                <li>
+                    <a href="login">Login</a>
+                </li>
+                <li>
+                    <a href="signup">Sign Up</a>
+                </li>
+                <li>
+                    <a href="adminlogin">Librarian</a>
+                </li>
+                <li>
+                    <img id="image" src="/static/logo.png"  height="40px">
+                </li>
+            </ul>
+            </b>
+        </nav>
+        </header>
+        {%block content%}{%endblock%}
+    </body>
+    </html>

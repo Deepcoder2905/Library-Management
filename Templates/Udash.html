@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background-color: goldenrod;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        header ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header ul li {
+            margin: 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        header ul li a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .section-box {
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #6c757d;
+            padding-bottom: 10px;
+        }
+
+        .book {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .book li {
+            width: calc(30% - 20px);
+            margin-right: 20px;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .book h3 {
+            margin-top: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 50%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        select, input {
+            width: 20%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>Welcome to Bookzy</li>
+                <li><a href="udash">Home</a></li>
+                <li><a href="my_books">My Books</a></li>
+                <!-- <li><a href="stats">Stats</a></li> -->
+                <li><a href="uprofile"><img id="image" src="/static/logo.png" height="30px"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="search-container">
+        <form action="/search" method="GET">
+            <select name="filter">
+                <option value="section">Section</option>
+                <option value="book">Book</option>
+                <option value="author">Author</option>
+            </select>
+            <input type="text" placeholder="Search..." name="query">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+  
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <p style="color: red; text-align: center;">{{ message }}</p>
+                {% else %}
+                    <p style="color: green;text-align: center;">{{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <div class="section-box">
+        <h2 class="section-title">Recently Added Books</h2>
+        <ul class="book">
+            {% for book in recent_books %}
+                <li>
+                    <h3>Title: {{ book.title }}</h3>
+                    <p>Author: {{ book.author }}</p>
+                    <div class="action-buttons">
+                        <form action="/request_book" method="POST">
+                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                            <input type="hidden" name="user_id" value="{{ user_id }}">
+                            <button type="submit">Request</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="section-box">
+        <h2 class="section-title">Top Rated Books</h2>
+        <ul class="book">
+            {% for book, avg_rating in top_rated_books %}
+                <li>
+                    <h3>Title: {{ book.title }}</h3>
+                    <p>Author: {{ book.author }}</p>
+                    <p>Average Rating: {{ avg_rating }}</p>
+                    <div class="action-buttons">
+                        <form action="/request_book" method="POST">
+                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                            <input type="hidden" name="user_id" value="{{ user_id }}">
+                            <button type="submit">Request</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="section-box">
+        <h2 class="section-title">In Demand (only 3 copies available)</h2>
+        <ul class="book">
+            {% for book in books %}
+                {% if book.Quantity < 4 %}
+                    <li>
+                        <h3>Title: {{book.title }}</h3> 
+                        <p>Author: {{ book.author }}</p>
+                        <div class="action-buttons">
+                            <form action="/request_book" method="POST">
+                                <input type="hidden" name="book_id" value="{{ book.id }}">
+                                <input type="hidden" name="user_id" value="{{ user_id }}">
+                                <button type="submit">Request</button>
+                            </form>
+                        </div>
+                       
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    {% for section in sections %}
+        <div class="section-box">
+            <h2 class="section-title">{{ section.name }}</h2>
+            <ul class="book">
+                {% for book in books %}
+                    {% if book.section_id == section.id %}
+                        <li>
+                            <h3>Title: {{book.title }}</h3> 
+                            <p>Author: {{ book.author }}</p>
+                            <div class="action-buttons">
+                                <form action="/request_book" method="POST">
+                                    <input type="hidden" name="book_id" value="{{ book.id }}">
+                                    <input type="hidden" name="user_id" value="{{ user_id }}">
+                                    <button type="submit">Request</button>
+                                </form>
+                            </div>
+                           
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    <div class="section-box">
+        <h2 class="section-title">Unassigned Books</h2>
+        <ul class="book">
+            {% for book in books %}
+            {% if book.section_id==0%}
+                <li>
+                    <h3>Title: {{ book.title }}</h3>
+                    <p>Author: {{ book.author }}</p>
+                    <div class="action-buttons">
+                        <form action="/request_book" method="POST">
+                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                            <input type="hidden" name="user_id" value="{{ user_id }}">
+                            <button type="submit">Request</button>
+                        </form>
+                    </div>
+                </li>
+            {%endif%}
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,92 @@
+
+<html>
+<head>
+  <title>Remove Section</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .form-group select {
+      width: calc(100% - 16px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      background-color: #4caf50;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #333;
+    }
+
+
+ </style>
+</head>
+<body>
+<div class="container">
+
+  <h2>Remove Section</h2>
+  <div class="form-group">
+  <form action="/remove_section" method="post">
+  <label for="section">Section:</label>
+    <select id="section" name="section">
+      {% for section in sections %}
+        <option value="{{ section.id }}">{{ section.name }}</option>
+      {% endfor %}
+    </select>
+  <p style="text-align: center;"><b>Are you sure you want to remove the section?</b></p>
+  <label>
+  </div>
+    <input type="radio" name="answer" value="yes" required>Yes
+  </label>
+  <label>
+    <input type="radio" name="answer" value="no" required>No
+  </label>  
+   <br>
+  <br>
+  
+    <button type="submit">Yes, remove section</button>
+  </form>
+
+  <a href="/admindashboard" class="link">Back to Admin Dashboard</a>
+</div>
+</body>
+</html>

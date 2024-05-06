@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{%block content%}
+<style>
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border: 5px solid black;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .error {
+      color: #ff0000;
+      margin-top: 5px;
+    }
+  </style>
+<div class="container">
+    <h2>Librarian Login</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <p style="color: red;">{{ message }}</p>
+                {% else %}
+                    <p style="color: green;">{{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form id="LoginForm" action="/adminlogin" method="post">
+    <label for="username">Admin Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Admin Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="button" onclick="validateForm()">Login</button>
+    </form>
+      <div id="errorMessages" class="error"></div>
+    </div>
+  
+    <script>
+      function validateForm() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        
+  
+        var errorMessages = '';
+  
+        if (!username || !password ) {
+          errorMessages += 'All fields are required.<br>';
+        }
+  
+        if (errorMessages) {
+          document.getElementById('errorMessages').innerHTML = errorMessages;
+        } else {
+          document.getElementById('LoginForm').submit();
+        }
+      }
+    </script>
+{%endblock%}

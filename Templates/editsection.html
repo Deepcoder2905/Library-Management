@@ -1,0 +1,76 @@
+<html>
+<head>
+  <title>Edit Section</title>
+  <style>
+      body{  
+    font-size: large;
+    }  
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #333;
+    }
+    .container {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+ </style>
+</head>
+<body>
+  <div class="container">
+
+  <h2>Edit Section</h2>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <p style="color: red;">{{ message }}</p>
+                {% else %}
+                    <p style="color: green;">{{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+  <form action="/editsection/{{ section.id }}" method="post">
+    <p> The edits you want to make: </p>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{section.name}}">
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" value="{{section.description}}">
+
+    <button type="submit">Update</button>
+    </form>
+    <a href="/admindashboard" class="link">Back to Admin Dashboard</a>
+  </div>
+  </body>
+</html>

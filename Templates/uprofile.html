@@ -1,0 +1,168 @@
+<html>
+    <head>
+        <title>
+            Library Management
+        </title>
+        <style type=text/css>   
+            body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background-color: goldenrod;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        header ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header ul li {
+            margin: 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        header ul li a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        a {
+            color: blue;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            }
+        table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+        th, td {
+                padding: 10px 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+        th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+                color: #333;
+            }
+        tr:nth-child(even) {
+                background-color: #f5f5f5;
+            }
+        .cancel-button {
+                background-color: #dc3545; 
+                color: white;
+            }
+
+     </style>      
+    </head>
+    <body>
+        <header>
+        <nav><b>
+            <ul>
+                <li>
+                    Welcome, User {{ user_username }}
+                </li>
+                <li>
+                    <a href="/udash">Home</a>
+                </li>
+                <li>
+                    <a href="/my_books">My Books</a>
+                </li>
+                <li>
+                    <a href="/uprofile"><img id="image" src="/static/logo.png" height="40px"></a>
+                </li>
+                
+            </ul>
+            </b>
+        </nav>
+        </header>
+        <br>
+        <br>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+                <p style="color: red;">{{ message }}</p>
+            {% else %}
+                <p style="color: green;">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <div class="container">
+        <h2> Your Profile </h2>
+        <p> <b> Username: </b>{{user.username}}</p>
+        <p><b>Password: </b>{{user.password}}</p>
+        <p><b>Email: </b>{{user.email}}</p>
+        <p><b>Designation: </b> User </p>
+        <form action="/changepassu" method="POST">
+            <input type="text" name="user_password" value="{{user_password}}">
+            <button type="submit">Change Password</button>
+        </form>
+        <br>
+        <a href="/logout">Logout</a>
+        <br>
+            <h2>Book Requests</h2>
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Cancel</th>
+                    
+                </tr>
+                {% for request in bookrequests %}
+                {% if request.user_id==user.id%}
+                {% if request.status != 'Accepted' %}
+                    <tr>
+                        <td>{{ request.name }}</td>
+                        <td>{{ request.author }}</td>
+                        <td>{{request.status}}</td>
+                        <td>
+                            <form action="/cancel_request/{{ request.id }}" method="post">
+                                <button type="submit" class="cancel-button">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {%endif%}
+                    {%endif%}
+                {% endfor %}
+            </table>
+        </div>
+        </body>
+        </html>

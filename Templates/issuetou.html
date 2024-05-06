@@ -1,0 +1,147 @@
+<html>
+<head>
+  <title>Book Managagement</title>
+  <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f8f9fa;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      form {
+        margin-bottom: 30px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      select,
+      input[type="submit"] {
+        width: calc(100% - 16px);
+        padding: 10px;
+        margin-bottom: 16px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+      }
+
+      button {
+        width: calc(100% - 16px);
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th, td {
+        border: 1px solid #dee2e6;
+        padding: 8px;
+      }
+
+      th {
+        background-color: #343a40;
+        color: white;
+        text-align: left;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      .container {
+        max-width: 600px;
+        margin: 100px auto;
+        padding: 40px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #333;
+      }
+ </style>
+</head>
+<body>
+    <div class="container">
+
+  <h2>Issue Book</h2>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <p style="color: red;">{{ message }}</p>
+                {% else %}
+                    <p style="color: green;">{{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form action="/issuetou" method="post">
+        <label for="book">Books:</label>
+        <select id="book" name="book">
+          {% for book in booksall %}
+            <option value="{{ book.id }}">{{ book.title }}</option>
+          {% endfor %}
+        </select>
+        <p style="text-align: center;"><b>Book is issued to</b></p>
+        <label for="user"> User: </label>
+        <select id="user" name="user">
+          {% for user in users %}
+            <option value="{{user.id}}">{{user.username}}</option>
+          {% endfor %}
+        </select>
+        <br><br>
+        <button type="submit">Issue</button>
+      </form>
+      
+      <table>
+        <thead>
+        <tr>
+          <th>Book_Id</th>
+          <th>User</th>
+          <th>Revoke Access</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for book in books %}
+          {% for user in users %}
+            {% if book.user_id == user.id %}
+              <tr>
+                <td>{{ book.book_id }}</td>
+                <td>{{ user.username }}</td>
+                <td style="text-align: center;">
+                  <form action="/revoke" method="post">
+                    <input type="hidden" name="user_id" value="{{user.id}}">
+                    <input type="hidden" name="title" value="{{book.book_id}}">
+                    <button type="submit" >Revoke</button>
+                  </form>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+        </tbody>
+      </table>
+      <a class="link" href="/admindashboard">Back to Admin Dashboard</a>
+    </div>
+      
+      </body>
+      </html>

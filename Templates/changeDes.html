@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Change Designation</title>
+      <style>
+      body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: calc(100% - 16px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #4caf50;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #333;
+    }
+    </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2> Make User to a Librarian</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <p style="color: red;">{{ message }}</p>
+                    {% else %}
+                        <p style="color: green;">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/changeDes" method="POST">
+          <div class="form-group">
+            <label for="username">User:</label>
+            <select id="username" name="username">
+          {% for user in users %}
+            <option value="{{ user.username }}">{{ user.username }}</option>
+          {% endfor %}
+        </select>
+        </div>
+          <br>
+        <button type="submit">Change Designation</button>
+        
+        </form>
+        <a href="/admindashboard" class="link">Back to Admin Dashboard</a>
+      </div>  
+  </body>
+</html>

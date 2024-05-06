@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{%block content%}
+<style>
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border: 5px solid black;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .error {
+      color: #ff0000;
+      margin-top: 5px;
+    }
+  </style>
+  
+
+
+  <div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      {% for category, message in messages %}
+          {% if category == 'error' %}
+              <p style="color: red;">{{ message }}</p>
+          {% else %}
+              <p style="color: green;">{{ message }}</p>
+          {% endif %}
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+    <h2>Signup Form</h2>
+    <form id="signupForm" action="/signup" method="post">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required>
+      
+      <button type="button" onclick="validateForm()">Sign Up</button>
+    </form>
+    <div id="errorMessages" class="error"></div>
+  </div>
+
+  <script>
+    function validateForm() {
+      var username = document.getElementById('username').value;
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+
+      var errorMessages = '';
+
+      if (!username || !email || !password || !confirmPassword) {
+        errorMessages += 'All fields are required.<br>';
+      }
+
+      if (password !== confirmPassword) {
+        errorMessages += 'Passwords do not match.<br>';
+      }
+
+      if (errorMessages) {
+        document.getElementById('errorMessages').innerHTML = errorMessages;
+      } else {
+        document.getElementById('signupForm').submit();
+      }
+    }
+  </script>
+{%endblock%}

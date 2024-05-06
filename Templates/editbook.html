@@ -1,0 +1,103 @@
+  <html>
+  <head>
+    <title>Edit Book</title>
+    <style>
+      body   
+    {    
+    font-size: large;   
+    }  
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #333;
+  }
+  .container {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-group select {
+    width: calc(100% - 16px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  </style>
+  </head>
+  <body>
+  <div class="container">
+    <h2>Edit Book</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              {% for category, message in messages %}
+                  {% if category == 'error' %}
+                      <p style="color: red;">{{ message }}</p>
+                  {% else %}
+                      <p style="color: green;">{{ message }}</p>
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+      {% endwith %}
+    <form action="/editbook/{{ book.id }}" method="post">
+      <p> The edits you want to make: </p>
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" value="{{book.title}}">
+
+          <label for="author">Author:</label>
+          <input type="text" id="author" name="author" value="{{book.author}}" >
+
+          <label for="Content">Content:</label>
+          <input type="text" id="Content" name="Content" value="{{book.Content}}" >
+
+          <label for="Quantity">Quantity:</label>
+          <input type="number" id="Quantity" name="quantity" value="{{book.Quantity}}" >
+          
+          <label for="pdf_path">PDF Path:</label>
+          <input type="text" name="pdf_path" id="pdf_path" value="{{book.pdf_path}}">
+          <div class="form-group">
+            <label for="section">Section:</label>
+            <select id="section" name="section">
+              {% for section in sections %}
+                <option value="{{ section.id }}">{{ section.name }}</option>
+              {% endfor %}
+                <option value="Unassigned">Unassigned</option>
+            </select>
+          </div>
+
+      <button type="submit">Update</button>
+      </form>
+      <a href="/admindashboard" class="link">Back to Admin Dashboard</a>
+  </div>
+  </body>
+</html>
+          
