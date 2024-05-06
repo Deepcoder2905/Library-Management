@@ -31,6 +31,7 @@ python app.py
 ## Project Structure
 * **static/:** Contains static files such as images and PDFs.
 * **templates/:** Contains HTML templates.
+* **Instance/:** Contains the database.
 * **app.py:** Main application file. (This include the main code along with the models)
 * **README.md:** This file.
 * **Project Documentation:** This stores the detail information about the project.
